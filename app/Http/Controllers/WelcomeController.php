@@ -11,8 +11,19 @@ class WelcomeController extends Controller
 {
     
     public function index()
-    {
-        return view('welcome');
+    {   
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = $user->tasks()->orderBy('type', 'state','desc')->paginate(20);
+            
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
+        
+        return view('welcome' , $data);
     }
 
     

@@ -16,7 +16,17 @@ Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
 
 
 
-Route::get('/', 'WelcomeController@index');
+// Route::get('/', 'WelcomeController@index');
+Route::get('/', 'TasksController@index')->name('tasks.home');
 
-//Route::resource('tasks', 'TasksController');
+Route::resource('tasks', 'TasksController');
+Route::resource('parenttasks', 'ParenttasksController');
+
+
+//認証できた者だけがタスクコントローラーにアクセス可
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('users', 'UsersController', ['only' => ['index', 'show','create','edit','delete']]);
+    Route::resource('tasks', 'TasksController', ['only' => ['create','store','edit','update','destroy']]);
+});
+
 
